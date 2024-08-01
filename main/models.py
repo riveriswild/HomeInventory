@@ -24,5 +24,23 @@ class GeneralItem(models.Model):
     location = models.ForeignKey(Location, on_delete=models.SET_NULL, null=True)
     comments = models.TextField(blank=True, null=True)
 
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        self.track_price_history()
+
+    def track_price_history(self):
+        if self.price:
+            PriceHistory.objects.create(item=self, price=self.price)
+
+
+class PriceHistory(models.Model):
+    ''' Tracks price changes for an item '''
+    item = models.ForeignKey(GeneralItem, on_delete=models.CASCADE)
+    price = models.IntegerField()
+    date_recorded = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.item} - ${self.price} at {self.date_recorded}"
+
 
 # Create your models here.
