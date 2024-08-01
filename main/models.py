@@ -1,5 +1,12 @@
 from django.db import models
 
+class Location(models.Model):
+    ''' Tree-like location structure within the house'''
+    name = models.CharField(max_length=256)
+    parent = models.ForeignKey('self', on_delete=models.CASCADE, blank=True, null=True, related_name='children')
+
+    def __str__(self):
+        return self.name
 
 class GeneralItem(models.Model):
     ''' Describes a general item in inventory'''
@@ -8,7 +15,7 @@ class GeneralItem(models.Model):
     photo = models.ImageField(upload_to="images/")
     quantity = models.IntegerField(null=True, blank=True)
     price = models.IntegerField(null=True, blank=True)
-    location = models.CharField(max_length=256)  # maybe linked model
+    location = models.ForeignKey(Location, on_delete=models.SET_NULL, null=True)
     comments = models.TextField(blank=True, null=True)
 
 
