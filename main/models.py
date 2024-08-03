@@ -35,11 +35,12 @@ class GeneralItem(models.Model):
 
     purchased_at = models.DateTimeField(auto_now_add=True)
     purchase_place = models.CharField(max_length=1024, blank=True, null=True)
-    photo = models.ImageField(upload_to="images/")
+    photo = models.ImageField(upload_to="images/", blank=True, null=True)
     quantity = models.IntegerField(null=True, blank=True)
     price = models.IntegerField(null=True, blank=True)
     location = models.ForeignKey(Location, on_delete=models.SET_NULL, null=True)
     comments = models.TextField(blank=True, null=True)
+    name = models.CharField(max_length=356)
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
