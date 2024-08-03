@@ -1,0 +1,29 @@
+### OSX ###
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Icon must end with two \r
+Icon
+
+*.log
+.idea/
+*env/
+*EXPERIMENTS*
+
+# Python/Django
+__pycache__/
+*.py[cod]
+*.pyc
+
+# scripts
+/EXPERIMENTS/
+/bin/
+
+settings.ini
+settings.prod.ini
+docker-compose.yml
+public/
+static/
+dump.rdb
+test_scripts
