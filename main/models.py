@@ -2,7 +2,7 @@ from django.db import models
 
 
 class Location(models.Model):
-    """Tree-like location structure within the house"""
+    ''' Tree-like location structure within the house '''
 
     name = models.CharField(max_length=256)
     parent = models.ForeignKey(
@@ -12,9 +12,26 @@ class Location(models.Model):
     def __str__(self):
         return self.name
 
+    def get_ancestors(self):
+        ''' Returns all ancestors of the location '''
+        ancestors = []
+        location = self
+        while location.parent is not None:
+            location = location.parent
+            ancestors.append(location)
+        return ancestors
+
+    def get_descendants(self):
+        ''' Returns all descendants of the location '''
+        descendants = []
+        for child in self.children.all():
+            descendants.append(child)
+            descendants.extend(child.get_descendants())
+        return descendants
+
 
 class GeneralItem(models.Model):
-    """Describes a general item in inventory"""
+    ''' Describes a general item in inventory '''
 
     purchased_at = models.DateTimeField(auto_now_add=True)
     purchase_place = models.CharField(max_length=1024, blank=True, null=True)
@@ -41,6 +58,32 @@ class PriceHistory(models.Model):
 
     def __str__(self):
         return f"{self.item} - ${self.price} at {self.date_recorded}"
+
+
+class FoodItem(GeneralItem):
+    expiration_date = models.DateField()
+
+    def __str__(self):
+        return f"{self.name} (Food)"
+
+class ClothingItem(GeneralItem):
+    size = models.CharField(max_length=10)
+    color = models.CharField(max_length=50)
+
+    def __str__(self):
+        return f"{self.name} (Clothing)"
+
+class FurnitureItem(GeneralItem):
+    dimensions = models.CharField(max_length=100)
+
+    def __str__(self):
+        return f"{self.name} (Furniture)"
+
+class ApplianceItem(GeneralItem):
+    warranty_expiration = models.DateField()
+
+    def __str__(self):
+        return f"{self.name} (Appliance)"
 
 
 # Create your models here.
