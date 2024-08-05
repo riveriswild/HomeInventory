@@ -2,7 +2,7 @@ from django.db import models
 
 
 class Location(models.Model):
-    ''' Tree-like location structure within the house '''
+    """Tree-like location structure within the house"""
 
     name = models.CharField(max_length=256)
     parent = models.ForeignKey(
@@ -13,7 +13,7 @@ class Location(models.Model):
         return self.name
 
     def get_ancestors(self):
-        ''' Returns all ancestors of the location '''
+        """Returns all ancestors of the location"""
         ancestors = []
         location = self
         while location.parent is not None:
@@ -22,7 +22,7 @@ class Location(models.Model):
         return ancestors
 
     def get_descendants(self):
-        ''' Returns all descendants of the location '''
+        """Returns all descendants of the location"""
         descendants = []
         for child in self.children.all():
             descendants.append(child)
@@ -31,7 +31,7 @@ class Location(models.Model):
 
 
 class GeneralItem(models.Model):
-    ''' Describes a general item in inventory '''
+    """Describes a general item in inventory"""
 
     purchased_at = models.DateTimeField(auto_now_add=True)
     purchase_place = models.CharField(max_length=1024, blank=True, null=True)
@@ -52,7 +52,8 @@ class GeneralItem(models.Model):
 
 
 class PriceHistory(models.Model):
-    ''' Tracks price changes for an item '''
+    """Tracks price changes for an item"""
+
     item = models.ForeignKey(GeneralItem, on_delete=models.CASCADE)
     price = models.IntegerField()
     date_recorded = models.DateTimeField(auto_now_add=True)
@@ -67,6 +68,7 @@ class FoodItem(GeneralItem):
     def __str__(self):
         return f"{self.name} (Food)"
 
+
 class ClothingItem(GeneralItem):
     size = models.CharField(max_length=10)
     color = models.CharField(max_length=50)
@@ -74,11 +76,13 @@ class ClothingItem(GeneralItem):
     def __str__(self):
         return f"{self.name} (Clothing)"
 
+
 class FurnitureItem(GeneralItem):
     dimensions = models.CharField(max_length=100)
 
     def __str__(self):
         return f"{self.name} (Furniture)"
+
 
 class ApplianceItem(GeneralItem):
     warranty_expiration = models.DateField()
